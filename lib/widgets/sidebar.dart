@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../screen/login_page.dart'; // pastikan path sesuai struktur project-mu
 
 class AppSidebar extends StatelessWidget {
   final Function(int) onMenuSelected;
@@ -10,35 +12,113 @@ class AppSidebar extends StatelessWidget {
     required this.selectedIndex,
   });
 
+  Future<void> logoutUser(BuildContext context) async {
+    final shouldLogout = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        title: const Text(
+          'Konfirmasi Logout',
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange),
+        ),
+        content: const Text('Apakah Anda yakin ingin keluar dari akun ini?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text(
+              'Batal',
+              style: TextStyle(color: Colors.grey),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text(
+              'Ya, Logout',
+              style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldLogout == true) {
+      await FirebaseAuth.instance.signOut();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Berhasil logout"),
+          backgroundColor: Colors.orange,
+        ),
+      );
+
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (_) => const LoginPage()),
+        (route) => false,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          const UserAccountsDrawerHeader(
-            accountName: Text("Shaktya Daffa"),
-            accountEmail: Text("shaktya@example.com"),
+          // 🔹 Header akun dengan foto profil
+          UserAccountsDrawerHeader(
+            accountName: Text(
+              user?.displayName ?? "User",
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            accountEmail: Text(user?.email ?? "Tidak ada email"),
             currentAccountPicture: CircleAvatar(
               backgroundColor: Colors.white,
-              child: Icon(Icons.person, size: 40, color: Colors.orange),
+              child: ClipOval(
+                child: user?.photoURL != null
+                    ? Image.network(
+                        user!.photoURL!,
+                        fit: BoxFit.cover,
+                        width: 80,
+                        height: 80,
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Icon(Icons.person, size: 40, color: Colors.orange),
+                      )
+                    : Image.asset(
+                        'assets/jokowi1.jpeg', // 🔸 ganti dengan aset profil default kamu
+                        fit: BoxFit.cover,
+                        width: 80,
+                        height: 80,
+                      ),
+              ),
             ),
-            decoration: BoxDecoration(color: Colors.orange),
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFFFFA726), Color(0xFFFF7043)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
           ),
+
+          // 🔹 Menu navigasi
           _buildSidebarItem(Icons.restaurant, "Food Menu", 0),
           _buildSidebarItem(Icons.person, "Profile", 1),
           _buildSidebarItem(Icons.favorite, "Favorites", 2),
           _buildSidebarItem(Icons.article, "My Orders", 3),
+
           const Divider(),
+
+          // 🔹 Tombol Logout
           ListTile(
-            leading: const Icon(Icons.settings),
-            title: const Text("Settings"),
-            onTap: () => Navigator.pop(context),
-          ),
-          ListTile(
-            leading: const Icon(Icons.logout),
-            title: const Text("Logout"),
-            onTap: () => Navigator.pop(context),
+            leading: const Icon(Icons.logout, color: Colors.red),
+            title: const Text(
+              "Logout",
+              style: TextStyle(color: Colors.red),
+            ),
+            onTap: () => logoutUser(context),
           ),
         ],
       ),

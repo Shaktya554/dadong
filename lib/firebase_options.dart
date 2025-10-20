@@ -23,20 +23,11 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -51,7 +42,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDzaHyaO-WVrJSQzoSOpR2fNeKFR8IaQfk',
-    appId: '1:738820207445:android:41d3a23a06b9b3534db5dc',
+    appId: '1:738820207445:android:d03c510470b9c2e24db5dc',
     messagingSenderId: '738820207445',
     projectId: 'satepadang-545c4',
     storageBucket: 'satepadang-545c4.firebasestorage.app',
@@ -65,6 +56,34 @@ class DefaultFirebaseOptions {
     authDomain: 'satepadang-545c4.firebaseapp.com',
     storageBucket: 'satepadang-545c4.firebasestorage.app',
     measurementId: 'G-FMY6JV9CWR',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyAIH8YUrEo-NF9FVCfO833L3VS9YQWesT4',
+    appId: '1:738820207445:ios:22ee481adab575494db5dc',
+    messagingSenderId: '738820207445',
+    projectId: 'satepadang-545c4',
+    storageBucket: 'satepadang-545c4.firebasestorage.app',
+    iosBundleId: 'com.example.foodApp',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyAIH8YUrEo-NF9FVCfO833L3VS9YQWesT4',
+    appId: '1:738820207445:ios:22ee481adab575494db5dc',
+    messagingSenderId: '738820207445',
+    projectId: 'satepadang-545c4',
+    storageBucket: 'satepadang-545c4.firebasestorage.app',
+    iosBundleId: 'com.example.foodApp',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyBmoaYboV8FHKZAblUjsOQ5Eqi9OFTZs1w',
+    appId: '1:738820207445:web:dc8acba4a955296b4db5dc',
+    messagingSenderId: '738820207445',
+    projectId: 'satepadang-545c4',
+    authDomain: 'satepadang-545c4.firebaseapp.com',
+    storageBucket: 'satepadang-545c4.firebasestorage.app',
+    measurementId: 'G-HYGK94TB3H',
   );
 
 }
